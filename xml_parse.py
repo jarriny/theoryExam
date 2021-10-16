@@ -1,25 +1,57 @@
+import sys
+input = sys.stdin.read()
+
 import xml.etree.ElementTree as ET
+#import sys
+import itertools
+from dfa import dfa
+from transition import transition
+from runRead import run
+from xml_to_dfa import xml_to_dfa
 
-# https://docs.python.org/3/library/xml.etree.elementtree.html
+#input = sys.stdin.read()
 
-# parses the given xml file that gives an automata
+#print(input)
 
-def main():
-    try:
-        file = input()
-    except EOFError:
-        text = ""
-    automata = ET.parse(file)
-    root = automata.getroot()
-    for state in root.iter('state'):
-        print(state.get('name') + " ", end='')
-    print()
-    for state in root.iter('state'):
-        if state.find('initial') != None:
-            print(state.get('name') + " ")
-    for state in root.iter('state'):
-        if state.find('final') != None:
-            print(state.get('name') + " ")
+dfa_object = xml_to_dfa(input)
+alphabet = dfa_object.alpha
+one = itertools.product(alphabet, repeat=1)
+two = itertools.product(alphabet, repeat=2)
+three = itertools.product(alphabet, repeat=3)
+four = itertools.product(alphabet, repeat=4)
+five = itertools.product(alphabet, repeat=5)
 
-if __name__ == "__main__":
-    main()
+total = []
+totalFinal = []
+
+totalFinal.append("")
+
+for m in one:
+    total.append(m)
+
+for m in two:
+    total.append(m)
+
+for m in three:
+    total.append(m)
+
+for m in four:
+    total.append(m)
+
+for m in five:
+    total.append(m)
+
+for i in total:
+    k = ""
+    for j in i:
+        k = k + j
+    totalFinal.append(k)
+
+totalFinalFinal = []
+
+for ji in totalFinal:
+    if run(ji, dfa_object):
+        totalFinalFinal.append(ji)
+
+for k in totalFinalFinal:
+    print(k)
