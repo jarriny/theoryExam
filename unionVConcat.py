@@ -5,7 +5,7 @@ from nfa import nfa
 from transition import transition
 from xml_to_nfa import xml_to_nfa
 from nfa_to_xml import nfa_to_xml
-from concat import concat
+#from concat import concat
 from union import union
 from setDif import setDif
 from xml_parse import xml_parse
@@ -13,10 +13,10 @@ from xml_parse import xml_parse
 def main():
     filenames = sys.stdin.read()
     files = filenames.split(" ")
-    print("got here")
+    #print("got here")
     nfa1 = xml_to_nfa(files[0])
     nfa2 = xml_to_nfa(files[1])
-    nfa_to_xml(dif(nfa1, nfa2))
+    dif(nfa1, nfa2)
 
 def xml_par(xml):
    
@@ -57,11 +57,46 @@ def xml_par(xml):
     for k in totalFinalFinal:
         print(k) 
 
+def concat(nfa1, nfa2):
+    states = set()
+    alphabet = set()
+    transitions = set()
+    accept = set()
+    nfa2.change_state_names()
+    for state in nfa1.get_states():
+        states.add(state)
+    for state in nfa2.get_states():
+        states.add(state)
+    #union alpha
+    for a in nfa1.get_alpha():
+        alphabet.add(a)
+    for a in nfa2.get_alpha():
+        alphabet.add(a)
+    #start state
+
+    #union transitions
+    for t in nfa1.get_transitions():
+        transitions.add(t)
+    for t in nfa2.get_transitions():
+        transitions.add(t)
+    for x in nfa1.accept:
+        print("get here ")
+        transitions.add(transition(x, "", nfa2.start))
+    #union accept
+    for f in nfa2.get_accept():
+        accept.add(f)
+    n = nfa(states, alphabet, transitions, nfa1.start, accept)
+    print("TYPE N: ", type(n))
+    return n
+
 def dif(nfa1, nfa2):
-    con = nfa_to_xml(concat(nfa1, nfa2))
+    #print("type of nfa1: ", type(nfa1))
+    #print( "type nfa2", type(nfa2))
+    print("TYPE CONCAT:", type(concat(nfa1, nfa2)))
+    con = nfa_to_xml(concat(nfa1, nfa2))    
     un = nfa_to_xml(concat(nfa1, nfa2))
     conSet = xml_par(con)
-    unSet = xml_parse(nfa_to_xml(un))
+    unSet = xml_par(un)
     diff = setdiff(conSet, unSet)
 
 
