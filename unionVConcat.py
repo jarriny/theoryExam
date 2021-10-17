@@ -13,16 +13,54 @@ from xml_parse import xml_parse
 def main():
     filenames = sys.stdin.read()
     files = filenames.split(" ")
-    print("files: " + files[0] + " " + files[2])
+    print("got here")
     nfa1 = xml_to_nfa(files[0])
     nfa2 = xml_to_nfa(files[1])
     nfa_to_xml(dif(nfa1, nfa2))
 
+def xml_par(xml):
+   
+    nfa_object = xml_to_nfa(xml)
+    alphabet = nfa_object.alpha
+    if None in alphabet:
+        alphabet.remove(None)
+    one = itertools.product(alphabet, repeat=1)
+    two = itertools.product(alphabet, repeat=2)
+    three = itertools.product(alphabet, repeat=3)
+    four = itertools.product(alphabet, repeat=4)
+    five = itertools.product(alphabet, repeat=5)
+    total = []
+    totalFinal = []
+    totalFinal.append("")
+    for m in one:
+        total.append(m)
+    for m in two:
+        total.append(m)
+    for m in three:
+        total.append(m)
+    for m in four:
+        total.append(m)
+    for m in five:
+        total.append(m)
+    for i in total:
+        k = ""
+        for j in i:
+            k = k + j
+        totalFinal.append(k)
+
+    totalFinalFinal = []
+
+    for ji in totalFinal:
+        if run(ji, nfa_object):
+            totalFinalFinal.append(ji)
+    #print("len: " + len(totalFinalFinal))
+    for k in totalFinalFinal:
+        print(k) 
 
 def dif(nfa1, nfa2):
-    con = xml_to_nfa(concat(nfa1, nfa2))
-    un = xml_to_nfa(concat(nfa1, nfa2))
-    conSet = xml_parse(nfa_to_xml(con))
+    con = nfa_to_xml(concat(nfa1, nfa2))
+    un = nfa_to_xml(concat(nfa1, nfa2))
+    conSet = xml_par(con)
     unSet = xml_parse(nfa_to_xml(un))
     diff = setdiff(conSet, unSet)
 

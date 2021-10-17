@@ -24,3 +24,6 @@ run-exam1-homomorphism:
 
 run-exam1-intersection:
 	python3 intersect.py
+
+run-hw3-nfalang:
+	python3 xml_parse.py
